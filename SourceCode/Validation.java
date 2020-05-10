@@ -627,14 +627,89 @@ class Validation{
         }
     }
 
-    
+
+//__________________________________________________________________________________________________
+
+// employee functions
+
+    public static void changePassword(String id, String newPassword) {
+        int l = checkId(id);
+        if(l == 1 || l == 3){
+            System.out.println("\nUnable to locate Employee with Id: " + id);
+            System.out.println("Please Try Again\n");
+            return;
+        }
+
+        Connection con = null;
+        PreparedStatement preparedStmt = null;
+        Statement stmt = null;
+        String updateString = "Update Employee set password = ? where empId = ?";
+
+        try {
+            con = DriverManager.getConnection(  
+            "jdbc:mysql://localhost:3306/Employee","root","root");  
+
+            con.setAutoCommit(false);
+
+            stmt=con.createStatement(); 
+
+            preparedStmt = con.prepareStatement(updateString);
+
+            preparedStmt.setString (1, newPassword);
+            preparedStmt.setString (2, id);
+            preparedStmt.execute();
+
+            con.commit();
+
+            System.out.println("Password Changed SuccessFully.\n");
+            return;
+        }
+
+        catch (SQLException e ) {
+            e.printStackTrace();
+            if (con != null) {
+                try {
+                    System.err.print("Transaction is being rolled back");
+                    con.rollback();
+                } catch(SQLException excep) {
+                    excep.printStackTrace();
+                }
+            }
+        } 
+
+        finally {
+            try{
+                if(preparedStmt!=null)
+                   preparedStmt.close();
+            }
+            catch(SQLException se2){
+            }
+            
+            try{
+                if(con!=null){
+                    con.setAutoCommit(true);
+                    con.close();
+                }
+            }catch(SQLException se){
+                se.printStackTrace();
+            }
+        }
+
+
+    }
+
+
+
+//__________________________________________________________________________________________________
+
+
     public static HashMap<String, String> validate(String id, String password, String type){ 
         HashMap<String, String> userDetails = new HashMap<>();
         
         userDetails.put("Login", "false"); 
 
         Connection con = null;
-        String query = "select * from Employee";
+        String query = "select * from Employee where empId = '" + id + "' and password = '" + password + "'";
         Statement stmt = null;
 
         try{  
@@ -646,7 +721,8 @@ class Validation{
             stmt = con.createStatement();  
             
             if(type.equals("admin"))
-                query += " where type = 'admin'";
+                query += " and type = 'admin'";
+
             ResultSet rs=stmt.executeQuery(query);  
             
             if(!rs.next()) {
@@ -654,7 +730,7 @@ class Validation{
                 return userDetails;
             }
             // System.out.println(rs);
-            // System.out.println(rs.getString(4) + " " + password);
+            System.out.println(rs.getString(4) + " " + password);
             if(!rs.getString(4).equals(password)) { 
                 System.out.println("\nWrong Password\nPlease Try Again\n");
                 return userDetails;
@@ -691,12 +767,20 @@ class Validation{
         } 
     }  
 
+
     public static HashMap<String, String> logIN(String type) {
         
         java.io.Console console = System.console();
         System.out.println("\nLogin: ");
-        String empId = console.readLine("  Employee Id: ");
+        String empId;
+        if(type.equals("admin")) {
+            empId = console.readLine("  Admin Id: ");
+        }
+        else {
+            empId = console.readLine("  Employee Id: ");
+        }
         String password = new String(console.readPassword("  Password: "));
+        System.out.println(password);
         HashMap<String, String> details = validate(empId, password, type);
         // System.out.println(userDetails);
         if(details.get("Login").equals("false"))
