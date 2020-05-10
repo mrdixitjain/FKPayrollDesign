@@ -7,21 +7,16 @@ class MonthlyEmployee extends Employee {
 
     private float salary;
 
-    // called after login
-    public MonthlyEmployee(String name, String id, String password, String mop, boolean isInUnion, float commissionRate) {
-        super(name, id, password, mop, isInUnion, commissionRate);
-        // this.salary = Validation.getSalary(id);
-    }
-
     // called while adding new employee
     public MonthlyEmployee(String name, String id, String password, String mop, boolean isInUnion, float commissionRate, float salary) {
         super(name, id, password, mop, isInUnion, commissionRate);
         this.salary = salary;
     }
 
-    public float getSalary() {
-        System.out.println("\nyour monthly salary is: " + this.salary + ".\n");
-        return this.salary;
+    public void getDetails() {
+        super.getDetails();
+        System.out.println("salary : " + salary);
+
     }
 
     
@@ -61,13 +56,9 @@ class MonthlyEmployee extends Employee {
                     updateMOP();
                     break;
 
-                // case 5 : 
-                //     getDetails();
-                //     break;
-
-                // case 6 : 
-                //     showDetails();
-                //     break;
+                case 5 : 
+                    getDetails();
+                    break;
 
                 case 7 :
                     break Choice;

@@ -17,6 +17,14 @@ class Employee {
         this.commissionRate = commissionRate;
     }
 
+    public void getDetails() {
+        System.out.println("\nName : " + name);
+        System.out.println("id : " + id);
+        System.out.println("method of payment : " + mop);
+        System.out.println("in union : " + isInUnion);
+        System.out.println("commission rate : " + commissionRate);
+    }
+
     public String getName() {
         return name;
     }
@@ -94,8 +102,12 @@ class Employee {
 
     public void updateMOP() {
 
-        if(Validation.updateMOP(this.id));
-            this.isInUnion = false;
+        if(Validation.updateMOP(this.id)){
+            String newMOP = Validation.getMOP(this.id);
+            if(newMOP.equals(""));
+            else
+                this.mop = newMOP;
+        }
         
     }
 
