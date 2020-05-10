@@ -95,7 +95,7 @@ class Payroll {
         Statement stmt = null;
         PreparedStatement preparedStmt = null;
 
-        String getQuery = "select Employee.*, salary from Employee Inner Join MonthlySalary Using(empId) where type = 'monthly' GROUP BY empId;";
+        String getQuery = "select Employee.*, salary from Employee Inner Join MonthlySalary Using(empId) where type = 'monthly' and working = true GROUP BY empId;";
 
         String updateQuery = "delete from Employee where working = 0;";
 
@@ -116,6 +116,21 @@ class Payroll {
             do {
 
                 System.out.println("\nEmployee Id: " + rs.getString("empId") + "\nEmployee Name: " + rs.getString("name") + "\n  Total Payment: " + rs.getFloat("salary") + "\n  Method of Payment: " + rs.getString("mop"));
+            } while(rs.next());
+            System.out.println();
+
+            getQuery = "select Employee.*, due from Employee Inner Join dues Using(empId) where type = 'monthly' and working = false GROUP BY empId;";
+
+             rs = stmt.executeQuery(getQuery);
+
+            if(!rs.next()){
+                System.out.println("\nNo dues\n");
+                return;
+            }
+
+            do {
+
+                System.out.println("\nEmployee Id: " + rs.getString("empId") + "\nEmployee Name: " + rs.getString("name") + "\n  Total Payment: " + rs.getFloat("due") + "\n  Method of Payment: " + rs.getString("mop"));
             } while(rs.next());
             System.out.println();
 
