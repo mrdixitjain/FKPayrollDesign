@@ -694,10 +694,75 @@ class Validation{
                 se.printStackTrace();
             }
         }
-
-
     }
 
+
+
+
+    public static void addToUnion(String id) {
+        int l = checkId(id);
+        if(l == 1 || l == 3){
+            System.out.println("\nUnable to locate Employee with Id: " + id);
+            System.out.println("Please Try Again\n");
+            return;
+        }
+
+        Connection con = null;
+        PreparedStatement preparedStmt = null;
+        String updateString = "Update Employee set isInUnion = ? where empId = ?;";
+
+        try {
+            con = DriverManager.getConnection(  
+            "jdbc:mysql://localhost:3306/Employee","root","root");  
+
+            con.setAutoCommit(false);
+
+            preparedStmt = con.prepareStatement(updateString);
+
+            preparedStmt.setBoolean (1, true);
+            preparedStmt.setString (2, id);
+            preparedStmt.execute();
+
+            preparedStmt = con.prepareStatement("insert into UnionCharges (empId) values(?);");
+            preparedStmt.setString(1, id);
+            preparedStmt.execute();
+            con.commit();
+
+            System.out.println("Added to Union SuccessFully.\n");
+            return;
+        }
+
+        catch (SQLException e ) {
+            e.printStackTrace();
+            if (con != null) {
+                try {
+                    System.err.print("Transaction is being rolled back");
+                    con.rollback();
+                } catch(SQLException excep) {
+                    excep.printStackTrace();
+                }
+            }
+        } 
+
+        finally {
+            try{
+                if(preparedStmt!=null)
+                    preparedStmt.close();
+            }
+            catch(SQLException se2){
+            }
+            
+            try{
+                if(con!=null){
+                    con.setAutoCommit(true);
+                    con.close();
+                }
+            }catch(SQLException se){
+                se.printStackTrace();
+            }
+        }
+    }
+                  
 
 
 //__________________________________________________________________________________________________
@@ -730,7 +795,6 @@ class Validation{
                 return userDetails;
             }
             // System.out.println(rs);
-            System.out.println(rs.getString(4) + " " + password);
             if(!rs.getString(4).equals(password)) { 
                 System.out.println("\nWrong Password\nPlease Try Again\n");
                 return userDetails;
@@ -780,7 +844,6 @@ class Validation{
             empId = console.readLine("  Employee Id: ");
         }
         String password = new String(console.readPassword("  Password: "));
-        System.out.println(password);
         HashMap<String, String> details = validate(empId, password, type);
         // System.out.println(userDetails);
         if(details.get("Login").equals("false"))

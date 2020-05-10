@@ -48,8 +48,25 @@ class Employee {
 
         Validation.changePassword(this.id, newPass);
         return;
+    }
 
 
+    public void joinUnion() {
+        if(getInUnion()) {
+            System.out.println("\nAlready in Union\n");
+            return;
+        }
+
+        // showUnionCharges();
+
+        System.out.println("\nDo you want to join?\n  1. yes\n  2. no\n");
+        Scanner in = new Scanner(System.in);
+
+        int n = in.nextInt();
+
+        if(n!=1)
+            return;
+        Validation.addToUnion(this.id);
     }
 
     public String getMop() {
@@ -62,10 +79,6 @@ class Employee {
 
     public boolean getInUnion() {
         return isInUnion;
-    }
-
-    public void joinUnion() {
-        isInUnion = true;
     }
 
     public void leaveUnion() {

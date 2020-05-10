@@ -47,9 +47,9 @@ class MonthlyEmployee extends Employee {
                     updatePassword();
                     break;
 
-                // case 2 : 
-                //     joinUnion();
-                //     break;
+                case 2 : 
+                    joinUnion();
+                    break;
 
                 // case 3 : 
                 //     leaveUnion();
