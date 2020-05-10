@@ -24,6 +24,8 @@ class MonthlyEmployee extends Employee {
         return this.salary;
     }
 
+    
+
     public int showChoices() {
         super.showChoices();
         Scanner in = new Scanner(System.in);
@@ -55,19 +57,19 @@ class MonthlyEmployee extends Employee {
                     leaveUnion();
                     break;
 
-                // case 4 : 
-                //     joinUnion();
-                //     break;
+                case 4 : 
+                    updateMOP();
+                    break;
 
                 // case 5 : 
-                //     updateMOP();
-                //     break;
-
-                // case 6 : 
                 //     getDetails();
                 //     break;
 
-                case 7 : 
+                // case 6 : 
+                //     showDetails();
+                //     break;
+
+                case 7 :
                     break Choice;
 
                 default :

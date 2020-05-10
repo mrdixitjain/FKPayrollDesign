@@ -66,8 +66,8 @@ class Employee {
 
         if(n!=1)
             return;
-        this.isInUnion = true;
-        Validation.addToUnion(this.id);
+        if(Validation.addToUnion(this.id))
+            this.isInUnion = true;
     }
 
 
@@ -85,9 +85,18 @@ class Employee {
 
         if(n!=1)
             return;
-        this.isInUnion = true;
-        Validation.leaveUnion(this.id);
+        if(Validation.leaveUnion(this.id))
+            this.isInUnion = false;
 
+    }
+
+
+
+    public void updateMOP() {
+
+        if(Validation.updateMOP(this.id));
+            this.isInUnion = false;
+        
     }
 
 
@@ -96,9 +105,7 @@ class Employee {
         return mop;
     }
 
-    public void updateMop() {
-        this.mop = mop;
-    }
+    
 
     public boolean getInUnion() {
         return isInUnion;

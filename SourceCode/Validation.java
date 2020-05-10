@@ -78,21 +78,21 @@ class Validation{
 
 
 
-    public static void updateMOP(String id, String type) {
+    public static boolean updateMOP(String id) {
         String[] MOP = {"Paycheck", "PaycheckPickup", "BankTransfer"};
 
         int l = checkId(id);
         if(l == 1 || l == 3){
             System.out.println("\nUnable to locate Employee with Id: " + id);
             System.out.println("Please Try Again\n");
-            return;
+            return false;
         }
 
         Connection con = null;
         PreparedStatement preparedStmt = null;
         Statement stmt = null;
-        String getQuery = "Select mop from Employee where empId = '" + id + "' and type = '" + type +"'";
-        String updateString = "Update Employee set mop = ? where empId = ? and type = ?";
+        String getQuery = "Select mop from Employee where empId = '" + id + "'";
+        String updateString = "Update Employee set mop = ? where empId = ?";
 
         try {
             con = DriverManager.getConnection(  
@@ -106,7 +106,7 @@ class Validation{
             if(!rs.next()) {
                 System.out.println("\nUnable to locate Employee with Id: " + id);
                 System.out.println("Please Try Again\n");
-                return;
+                return false;
             }
 
             System.out.println("\nCurrent Payment of Employee is: " + rs.getString(1));
@@ -117,7 +117,7 @@ class Validation{
             int choice = in.nextInt();
 
             if(choice != 1)
-                return;
+                return false;
 
             System.out.print("\nEnter Employee's Method Of Payment:\n  1. Paycheck\n  2. Paycheck Pickup\n  3. Bank Transfer\n");
 
@@ -127,12 +127,12 @@ class Validation{
 
             preparedStmt.setString (1, MOP[mop-1]);
             preparedStmt.setString (2, id);
-            preparedStmt.setString (3, type);
             preparedStmt.execute();
 
             con.commit();
 
             System.out.println("Method of Payment Changed SuccessFully.\nNew MOP: " + MOP[mop-1] + "\n");
+            return true;
         }
 
         catch (SQLException e ) {
@@ -145,6 +145,7 @@ class Validation{
                     excep.printStackTrace();
                 }
             }
+            return false;
         } 
 
         finally {
@@ -699,12 +700,12 @@ class Validation{
 
 
 
-    public static void addToUnion(String id) {
+    public static boolean addToUnion(String id) {
         int l = checkId(id);
         if(l == 1 || l == 3){
             System.out.println("\nUnable to locate Employee with Id: " + id);
             System.out.println("Please Try Again\n");
-            return;
+            return false;
         }
 
         Connection con = null;
@@ -729,7 +730,20 @@ class Validation{
             con.commit();
 
             System.out.println("Added to Union SuccessFully.\n");
-            return;
+            return true;
+        }
+
+        catch (SQLIntegrityConstraintViolationException e) {
+            System.out.println("\nprevious dues are remaining. First clear them\n");
+            if (con != null) {
+                try {
+                    System.err.print("Transaction is being rolled back");
+                    con.rollback();
+                } catch(SQLException excep) {
+                    excep.printStackTrace();
+                }
+            }
+            return false;
         }
 
         catch (SQLException e ) {
@@ -742,6 +756,7 @@ class Validation{
                     excep.printStackTrace();
                 }
             }
+            return false;
         } 
 
         finally {
@@ -765,12 +780,12 @@ class Validation{
 
 
 
-    public static void leaveUnion(String id) {
+    public static boolean leaveUnion(String id) {
         int l = checkId(id);
         if(l == 1 || l == 3){
             System.out.println("\nUnable to locate Employee with Id: " + id);
             System.out.println("Please Try Again\n");
-            return;
+            return false;
         }
 
         Connection con = null;
@@ -797,7 +812,7 @@ class Validation{
             con.commit();
 
             System.out.println("Removed from Union SuccessFully.\n");
-            return;
+            return true;
         }
 
         catch (SQLException e ) {
@@ -810,6 +825,7 @@ class Validation{
                     excep.printStackTrace();
                 }
             }
+            return false;
         } 
 
         finally {
