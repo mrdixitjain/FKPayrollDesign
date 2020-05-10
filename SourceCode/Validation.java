@@ -10,6 +10,9 @@ import java.sql.DriverManager;
 class Validation{  
 
 
+//_________________________________________________________________________________________________
+//Admin related functions
+
     public static void updatePassword(String id, String type) {
 
         int l = checkId(id);
@@ -782,8 +785,77 @@ class Validation{
 
 
 //__________________________________________________________________________________________________
-
 // employee functions
+
+
+    public static void addSaleReciept(String recieptNumber, String empId, LocalDate entryDate, int numberOfSales, float totalAmount) {
+            int l = checkId(empId);
+            if(l == 1 || l == 3){
+                System.out.println("\nUnable to locate Employee with Id: " + empId);
+                System.out.println("Please Try Again\n");
+                return;
+            }
+
+            Connection con = null;
+            PreparedStatement preparedStmt = null;
+            Statement stmt = null;
+            String updateString = "Insert into SaleReciepts values(?, ?, ?, ?, ?, ?)";
+
+            try {
+            con = DriverManager.getConnection(  
+            "jdbc:mysql://localhost:3306/Employee","root","root");  
+
+            con.setAutoCommit(false);
+
+            stmt=con.createStatement(); 
+
+            preparedStmt = con.prepareStatement(updateString);
+
+            preparedStmt.setString (1, recieptNumber);
+            preparedStmt.setString (2, empId);
+            preparedStmt.setInt (3, numberOfSales);
+            preparedStmt.setFloat (4, totalAmount);
+            preparedStmt.setDate (5, java.sql.Date.valueOf(entryDate));
+            preparedStmt.setBoolean (6, false);
+            preparedStmt.execute();
+
+            con.commit();
+
+            System.out.println("Sale Reciept Added SuccessFully.\n");
+            return;
+        }
+
+        catch (SQLException e ) {
+            e.printStackTrace();
+            if (con != null) {
+                try {
+                    System.err.print("Transaction is being rolled back");
+                    con.rollback();
+                } catch(SQLException excep) {
+                    excep.printStackTrace();
+                }
+            }
+        } 
+
+        finally {
+            try{
+                if(preparedStmt!=null)
+                   preparedStmt.close();
+            }
+            catch(SQLException se2){
+            }
+            
+            try{
+                if(con!=null){
+                    con.setAutoCommit(true);
+                    con.close();
+                }
+            }catch(SQLException se){
+                se.printStackTrace();
+            }
+        }
+    }
+
 
     public static void changePassword(String id, String newPassword) {
         int l = checkId(id);
@@ -1170,14 +1242,12 @@ class Validation{
                 se.printStackTrace();
             }
         }
-    }
-
-
-                  
+    }                  
 
 
 //__________________________________________________________________________________________________
-
+// login functions
+// for both admin and employee
 
     public static HashMap<String, String> validate(String id, String password, String type){ 
         HashMap<String, String> userDetails = new HashMap<>();

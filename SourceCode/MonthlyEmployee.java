@@ -19,22 +19,9 @@ class MonthlyEmployee extends Employee {
 
     }
 
-    
+    public void monthlyEmployeeMain() {
 
-    public int showChoices() {
-        super.showChoices();
-        Scanner in = new Scanner(System.in);
-
-        System.out.println("  6. know your salary\n  7. log out");
-
-        int n = in.nextInt();
-
-        return n;
-    }
-
-    public void employeeMain() {
-
-        int n = 7;
+        int n = 6;
         Choice:
         while(true) {
             n = showChoices();
@@ -58,6 +45,10 @@ class MonthlyEmployee extends Employee {
 
                 case 5 : 
                     getDetails();
+                    break;
+
+                case 6 : 
+                    addSaleReciept();
                     break;
 
                 case 7 :

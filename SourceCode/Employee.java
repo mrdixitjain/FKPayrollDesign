@@ -1,6 +1,9 @@
 
 import java.sql.*;
 import java.util.*;
+import java.time.*; 
+import java.time.format.*; 
+import java.time.temporal.ChronoUnit;
 
 class Employee {
 
@@ -23,14 +26,6 @@ class Employee {
         System.out.println("method of payment : " + mop);
         System.out.println("in union : " + isInUnion);
         System.out.println("commission rate : " + commissionRate);
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getId() {
-        return id;
     }
 
     public void updatePassword() {
@@ -60,7 +55,7 @@ class Employee {
 
 
     public void joinUnion() {
-        if(getInUnion()) {
+        if(this.isInUnion) {
             System.out.println("\nAlready in Union\n");
             return;
         }
@@ -111,23 +106,44 @@ class Employee {
         
     }
 
-
-
-    public String getMop() {
-        return mop;
-    }
-
     
+    public void addSaleReciept() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-uuuu"); 
+        String sdate = System.console().readLine("\nEnter Date(dd-mm-yyyy): ");
+        LocalDate date = LocalDate.now();
+        try{
+            date = LocalDate.parse(sdate, formatter);
+        }
+        catch (DateTimeParseException e) {
+            System.out.println("\nwrong date format\nPlease try again\n");
+            return;
+        }
+        LocalDate currentDate = LocalDate.now();
+        long daysBetween = ChronoUnit.DAYS.between(date, currentDate);
+        if(daysBetween >= 15){
+            System.out.println("\nCan't take entries older than 15 days\n");
+            return;
+        }
+        String recieptNumber = System.console().readLine("\nEnter Reciept Number: ");
+        System.out.print("\nEnter number of sales: ");
+        Scanner in = new Scanner(System.in);
+        int numberOfSales = in.nextInt();
+        float totalAmount;
+        System.out.print("\nEnter total sale amount: ");
+        totalAmount = in.nextFloat();
 
-    public boolean getInUnion() {
-        return isInUnion;
+        Validation.addSaleReciept(recieptNumber, this.id, date, numberOfSales, totalAmount);
     }
 
 
     public int showChoices() {
-        String choices = "\nEnter a choice:\n  1. Update password\n  2. Join Employee Union\n  3. Leave Employee Union\n  4. update method of payment\n  5. get your details\n";
+        String choices = "\nEnter a choice:\n  1. Update password\n  2. Join Employee Union\n  3. Leave Employee Union\n  4. update method of payment\n  5. get your details\n  6. Add Sale Reciept\n  7. Log Out\n";
         System.out.print(choices);
-        return 0;
+        Scanner in = new Scanner(System.in);
+        
+        int n = in.nextInt();
+
+        return n;
     }
 
 

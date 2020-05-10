@@ -46,7 +46,11 @@ class HourlyEmployee extends Employee {
                     getDetails();
                     break;
 
-                case 6 :
+                case 6 : 
+                    addSaleReciept();
+                    break;
+
+                case 7 :
                     break Choice;
 
                 default :
