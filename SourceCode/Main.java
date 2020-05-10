@@ -4,6 +4,7 @@ import java.sql.*;
 
 
 
+
 public class Main {
 
 	private static void login() {
@@ -14,12 +15,14 @@ public class Main {
 
 		HashMap<String, String> details;
 
-		if( k ==1 ) {
+		if( k == 1 ) {
 			details = Validation.logIN("admin");
 		}
-		else {
+		else if(k == 2) {
 			details = Validation.logIN("employee");
 		}
+		else
+			return;
 
 		if(details.get("Login").equals("false"))
 			return;
@@ -32,12 +35,26 @@ public class Main {
 				case "admin" :
 					Admin.adminMain(details);
 					break;
-				// case "hourly" :
-				// 	HourlyPaidEmployee.showChoices(details);
-				// 	break;
-				// case "flat" :
-				// 	Employee.showChoices(details);
-				// 	break;
+
+				case "hourly" :
+					float hourRate = Validation.getHourRate(details.get("id"));
+					if(hourRate < 0){
+						System.out.println("\nSome error occurred\nplease try again later");
+						return;
+					}
+					HourlyEmployee emp = new HourlyEmployee(details.get("name"), details.get("id"), details.get("password"), details.get("mop"), Boolean.parseBoolean(details.get("isInUnion")), Float.parseFloat(details.get("commissionRate")), hourRate);
+					emp.hourlyEmployeeMain();
+					break;
+
+				case "monthly" :
+					float salary = Validation.getSalary(details.get("id"));
+					if(salary < 0){
+						System.out.println("\nSome error occurred\nplease try again later");
+						return;
+					}
+					MonthlyEmployee emp = new MonthlyEmployee(details.get("name"), details.get("id"), details.get("password"), details.get("mop"), Boolean.parseBoolean(details.get("isInUnion")), Float.parseFloat(details.get("commissionRate")), salary);
+					emp.employeeMain();
+					break;
 			}
 		}
 
