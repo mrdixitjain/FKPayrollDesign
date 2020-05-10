@@ -80,31 +80,43 @@ class Admin {
 
         int n = in.nextInt();
 
-
-        String id = System.console().readLine("\nEnter Employee Id: ");
-
-        System.out.print("\nUpdate Employee's:\n  1. Method Of Payment\n  2. Password\n  3. Commission Rate\n");
+        System.out.print("\nUpdate Employee's:\n  1. Method Of Payment\n  2. Password\n  3. Commission Rate\n  4. Union MemberShip Fees\n  5. Union Regular Fees\n");
         if(n == 1)
-            System.out.println("  4. Hourly Rate");
+            System.out.println("  6. Hourly Rate");
         if(n == 2)
-            System.out.println("  4. Salary");
+            System.out.println("  6. Salary");
         System.out.println("  0. To return.");
 
 
 
         int k = in.nextInt();
 
+        if(k == 4) {
+            Validation.updateMembershipFees();
+            return;
+        }
+        else if (k == 5) {
+            Validation.updateRegularFees();
+            return;
+        }
+
+
+        String id = System.console().readLine("\nEnter Employee Id: ");
+
         switch(k) {
             case 1:
-                Validation.updateMOP(id, type[n-1]);
+                Validation.updateMOP(id);
                 break;
+            
             case 2:
                 Validation.updatePassword(id, type[n-1]);
                 break;
+            
             case 3:
                 Validation.updateCommission(id, type[n-1]);
                 break;
-            case 4:
+            
+            case 6:
                 Validation.updateSalary(id, type[n-1]);
                 break;
             default:
