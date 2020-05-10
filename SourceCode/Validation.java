@@ -1,6 +1,9 @@
 
 import java.sql.*; 
 import java.util.*;
+import java.util.Calendar;
+import java.time.LocalDate;
+
 
 import java.sql.DriverManager;
 
@@ -285,6 +288,131 @@ class Validation{
         }
 
 
+    }
+
+
+
+    public static void removeEmployee(String id, String type) {
+
+        int l = checkId(id);
+        if(l == 1 || l == 3){
+            System.out.println("\nUnable to locate Employee with Id: " + id);
+            System.out.println("Please Try Again\n");
+            return;
+        }
+
+        Connection con = null;
+        PreparedStatement preparedStmt = null;
+        Statement stmt = null;
+        String show1, show2, show3;
+        String getQuery = "Select name from Employee where empId = '" + id + "'";
+        String updateString = "Update Employee set working = ? where empId = ?";
+
+
+        if(type.equals("hourly")) {
+            show1 = "\nCurrent Hour Rate of Employee is: ";
+            show2 = "Hour Rate updated SuccessFully\nNew Hour Rate: ";
+            show3 = "\nEnter new Hour Rate: ";
+        }
+        else{
+            getQuery = "select name, salary from Employee Inner Join MonthlySalary on Employee.empId = MonthlySalary.empId where Employee.empId = '" + id + "'";
+            show1 = "\nCurrent salary of Employee is: ";
+            show2 = "\nsalary updated SuccessFully\nNew salary: ";
+            show3 = "\nEnter new Salary: ";
+        }
+
+        try {
+            con = DriverManager.getConnection(  
+            "jdbc:mysql://localhost:3306/Employee","root","root");  
+
+            con.setAutoCommit(false);
+
+            stmt=con.createStatement(); 
+            
+            ResultSet rs = stmt.executeQuery(getQuery);  
+            if(!rs.next()) {
+                System.out.println("\nUnable to locate Employee with Id: " + id);
+                System.out.println("Please Try Again\n");
+                return;
+            }
+
+            System.out.println("Employee Name: " + rs.getString(1));
+            System.out.println("Do You Want To remove?\n  1. yes\n  2. no\n");
+            Scanner in = new Scanner(System.in);
+
+            int choice = in.nextInt();
+
+            if(choice != 1)
+                return;
+
+
+            float dues = 0;
+            if(type == "monthly") {
+                float salary = rs.getFloat(2);
+                LocalDate date = LocalDate.now();
+                int lengthOfMonth = date.lengthOfMonth();
+                int dayOfMonth = date.getDayOfMonth();
+
+                dues = salary * dayOfMonth / lengthOfMonth;
+                System.out.println("\nDue Monthly salary of Employee: " + dues + "\n");
+            }
+
+
+
+            preparedStmt = con.prepareStatement(updateString);
+
+            preparedStmt.setBoolean (1, false);
+            preparedStmt.setString (2, id);
+            preparedStmt.execute();
+
+            if(type == "monthly") {
+                preparedStmt = con.prepareStatement("insert into dues values(?, ?)");
+                preparedStmt.setString (1, id);
+                preparedStmt.setFloat (2, dues);
+                preparedStmt.execute();
+            }
+
+            con.commit();
+
+            System.out.println("\nEmployee removed SuccessFully.\nDues will be paid in next Cycle\n");
+        }
+
+        catch (SQLException e ) {
+            e.printStackTrace();
+            if (con != null) {
+                try {
+                    System.err.print("Transaction is being rolled back");
+                    con.rollback();
+                } catch(SQLException excep) {
+                    excep.printStackTrace();
+                }
+            }
+        } 
+
+        finally {
+            try{
+                if(preparedStmt!=null)
+                   preparedStmt.close();
+            }
+            catch(SQLException se2){
+            }
+
+            try{
+                if(stmt!=null)
+                   stmt.close();
+            }
+            catch(SQLException se2){
+            }
+            
+            try{
+                if(con!=null){
+                    con.setAutoCommit(true);
+                    con.close();
+                }
+            }catch(SQLException se){
+                se.printStackTrace();
+            }
+        }
     }
 
 

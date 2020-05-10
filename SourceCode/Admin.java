@@ -59,6 +59,20 @@ class Admin {
 
     }
 
+
+
+    private static void removeEmployee() {
+
+        String id = System.console().readLine("\nEnter Employee Id: ");
+
+        System.out.println("\nEnter Type Of Employee:\n  1. Hourly Paid\n  2. Monthly Paid");
+        Scanner in = new Scanner(System.in);
+
+        int n = in.nextInt();
+
+        Validation.removeEmployee(id, type[n - 1]);
+    }
+
     private static void updateEmployee() {
         
         System.out.println("\nEnter Type Of Employee:\n  1. Hourly Paid\n  2. Monthly Paid");
@@ -129,9 +143,9 @@ class Admin {
                 case 1 :
                     addEmployee();
                     break;
-                // case 2 :
-                //     removeEmployee();
-                //     break;
+                case 2 :
+                    removeEmployee();
+                    break;
                 case 3 :
                     updateEmployee();
                     break;
