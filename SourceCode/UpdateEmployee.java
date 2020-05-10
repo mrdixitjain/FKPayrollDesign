@@ -11,7 +11,7 @@ import java.sql.DriverManager;
 
 class UpdateEmployee {
 
-    public static void addTimeCard(String cardNumber, String empId, LocalDate entryDate, float workHours) {
+    public static void addTimeCard(String cardNumber, String empId, LocalDate entryDate, float workHours, float extraHours) {
             int l = Validation.checkId(empId);
             if(l == 1 || l == 3){
                 System.out.println("\nUnable to locate Employee with Id: " + empId);
@@ -22,7 +22,7 @@ class UpdateEmployee {
             Connection con = null;
             PreparedStatement preparedStmt = null;
             Statement stmt = null;
-            String updateString = "Insert into TimeCards values(?, ?, ?, ?, ?)";
+            String updateString = "Insert into TimeCards values(?, ?, ?, ?, ?, ?)";
 
             try {
             con = DriverManager.getConnection(  
@@ -39,6 +39,7 @@ class UpdateEmployee {
             preparedStmt.setDate (3, java.sql.Date.valueOf(entryDate));
             preparedStmt.setFloat (4, workHours);
             preparedStmt.setBoolean (5, false);
+            preparedStmt.setFloat (6, extraHours);
             preparedStmt.execute();
 
             con.commit();

@@ -49,7 +49,12 @@ class HourlyEmployee extends Employee {
             System.out.println("\nnumber of worked hours can't be " + numberOfHours +"\nPlease try again\n");
             return;
         }
-        UpdateEmployee.addTimeCard(cardNumber, this.getId(), date, numberOfHours);
+        float extraHours = 0;
+        if(numberOfHours > 8){
+            extraHours = numberOfHours - 8;
+            numberOfHours = 8;
+        }
+        UpdateEmployee.addTimeCard(cardNumber, this.getId(), date, numberOfHours, extraHours);
 
     }
 
