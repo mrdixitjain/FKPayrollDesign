@@ -762,6 +762,74 @@ class Validation{
             }
         }
     }
+
+
+
+    public static void leaveUnion(String id) {
+        int l = checkId(id);
+        if(l == 1 || l == 3){
+            System.out.println("\nUnable to locate Employee with Id: " + id);
+            System.out.println("Please Try Again\n");
+            return;
+        }
+
+        Connection con = null;
+        PreparedStatement preparedStmt = null;
+        String updateString = "Update Employee set isInUnion = ? where empId = ?;";
+
+        try {
+            con = DriverManager.getConnection(  
+            "jdbc:mysql://localhost:3306/Employee","root","root");  
+
+            con.setAutoCommit(false);
+
+            preparedStmt = con.prepareStatement(updateString);
+
+            preparedStmt.setBoolean (1, false);
+            preparedStmt.setString (2, id);
+            preparedStmt.execute();
+
+
+
+            preparedStmt = con.prepareStatement("update UnionCharges set dues = dues + 100 where empId = ?;");
+            preparedStmt.setString(1, id);
+            preparedStmt.execute();
+            con.commit();
+
+            System.out.println("Removed from Union SuccessFully.\n");
+            return;
+        }
+
+        catch (SQLException e ) {
+            e.printStackTrace();
+            if (con != null) {
+                try {
+                    System.err.print("Transaction is being rolled back");
+                    con.rollback();
+                } catch(SQLException excep) {
+                    excep.printStackTrace();
+                }
+            }
+        } 
+
+        finally {
+            try{
+                if(preparedStmt!=null)
+                    preparedStmt.close();
+            }
+            catch(SQLException se2){
+            }
+            
+            try{
+                if(con!=null){
+                    con.setAutoCommit(true);
+                    con.close();
+                }
+            }catch(SQLException se){
+                se.printStackTrace();
+            }
+        }
+    }
                   
 
 
@@ -792,6 +860,11 @@ class Validation{
             
             if(!rs.next()) {
                 System.out.println("\nWrong Employee Id\nPlease Try Again\n");
+                return userDetails;
+            }
+
+            if(!rs.getBoolean(8)){
+                System.out.println("\nYou are not authorized to login\nYou have been fired\n");
                 return userDetails;
             }
             // System.out.println(rs);

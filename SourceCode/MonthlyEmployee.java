@@ -51,9 +51,9 @@ class MonthlyEmployee extends Employee {
                     joinUnion();
                     break;
 
-                // case 3 : 
-                //     leaveUnion();
-                //     break;
+                case 3 : 
+                    leaveUnion();
+                    break;
 
                 // case 4 : 
                 //     joinUnion();

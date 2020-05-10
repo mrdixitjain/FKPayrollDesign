@@ -66,8 +66,31 @@ class Employee {
 
         if(n!=1)
             return;
+        this.isInUnion = true;
         Validation.addToUnion(this.id);
     }
+
+
+    public void leaveUnion() {
+        if(!this.isInUnion) {
+            System.out.println("\nnot registered in Union\n");
+            return;
+        }
+
+        // showDues();
+        System.out.println("\nDo you want to Leave?\n  1. yes\n  2. no\n");
+        Scanner in = new Scanner(System.in);
+
+        int n = in.nextInt();
+
+        if(n!=1)
+            return;
+        this.isInUnion = true;
+        Validation.leaveUnion(this.id);
+
+    }
+
+
 
     public String getMop() {
         return mop;
@@ -81,9 +104,6 @@ class Employee {
         return isInUnion;
     }
 
-    public void leaveUnion() {
-        isInUnion = false;
-    }
 
     public int showChoices() {
         String choices = "\nEnter a choice:\n  1. Update password\n  2. Join Employee Union\n  3. Leave Employee Union\n  4. update method of payment\n  5. get your details\n";
