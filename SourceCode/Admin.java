@@ -135,13 +135,13 @@ class Admin {
     public static void runPayroll() {
         LocalDate currentDate = LocalDate.now();        
         DayOfWeek dayOfWeek = DayOfWeek.from(currentDate);  
-        if(dayOfWeek.get(ChronoField.DAY_OF_WEEK) == 7) {
+        if(dayOfWeek.get(ChronoField.DAY_OF_WEEK) == 5) {
             System.out.println("\nPaying to all Hourly workers\n");
             Validation.payHourlyEmployee();
         }
 
-        // currentDate.getDayOfMonth() == currentDate.lengthOfMonth()
-        if(true) {
+        
+        if(currentDate.getDayOfMonth() == currentDate.lengthOfMonth()) {
             System.out.println("\nPaying All commissions\n");
             Validation.payCommissions();
             System.out.println("\nPaying to all monthly Employee\n");
