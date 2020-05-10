@@ -81,9 +81,9 @@ class Admin {
         int k = in.nextInt();
 
         switch(k) {
-            // case 1:
-            //     Validation.updateMOP(id, type[n-1]);
-            //     break;
+            case 1:
+                Validation.updateMOP(id, type[n-1]);
+                break;
             // case 2:
             //     Validation.addToUnion(id, type[n-1]);
             //     break;
