@@ -49,7 +49,7 @@ class HourlyEmployee extends Employee {
             System.out.println("\nnumber of worked hours can't be " + numberOfHours +"\nPlease try again\n");
             return;
         }
-        Validation.addTimeCard(cardNumber, this.getId(), date, numberOfHours);
+        UpdateEmployee.addTimeCard(cardNumber, this.getId(), date, numberOfHours);
 
     }
 

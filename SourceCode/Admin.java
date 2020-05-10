@@ -98,11 +98,11 @@ class Admin {
         int k = in.nextInt();
 
         if(k == 4) {
-            Validation.updateMembershipFees();
+            UpdateUnionFees.updateMembershipFees();
             return;
         }
         else if (k == 5) {
-            Validation.updateRegularFees();
+            UpdateUnionFees.updateRegularFees();
             return;
         }
 
@@ -137,16 +137,17 @@ class Admin {
         DayOfWeek dayOfWeek = DayOfWeek.from(currentDate);  
         if(dayOfWeek.get(ChronoField.DAY_OF_WEEK) == 5) {
             System.out.println("\nPaying to all Hourly workers\n");
-            Validation.payHourlyEmployee();
+            Payroll.payHourlyEmployee();
         }
 
         
         if(currentDate.getDayOfMonth() == currentDate.lengthOfMonth()) {
             System.out.println("\nPaying All commissions\n");
-            Validation.payCommissions();
+            Payroll.payCommissions();
             System.out.println("\nPaying to all monthly Employee\n");
-            Validation.payMonthlyEmployee();
+            Payroll.payMonthlyEmployee();
         }
+        System.out.println();
     }
 
 

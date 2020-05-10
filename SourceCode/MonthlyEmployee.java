@@ -56,7 +56,7 @@ class MonthlyEmployee extends Employee {
 
                 default :
                     System.out.println("\nPlease! enter a valid choice\n");
-                    continue;
+                    continue Choice;
             }
         }
 

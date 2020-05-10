@@ -20,6 +20,10 @@ class Employee {
         this.commissionRate = commissionRate;
     }
 
+    public String getId() {
+         return id;
+    }
+
     public void getDetails() {
         System.out.println("\nName : " + name);
         System.out.println("id : " + id);
@@ -49,7 +53,7 @@ class Employee {
             return;
         }
 
-        Validation.changePassword(this.id, newPass);
+        UpdateEmployee.changePassword(this.id, newPass);
         return;
     }
 
@@ -69,7 +73,7 @@ class Employee {
 
         if(n!=1)
             return;
-        if(Validation.addToUnion(this.id))
+        if(UpdateEmployee.addToUnion(this.id))
             this.isInUnion = true;
     }
 
@@ -88,7 +92,7 @@ class Employee {
 
         if(n!=1)
             return;
-        if(Validation.leaveUnion(this.id))
+        if(UpdateEmployee.leaveUnion(this.id))
             this.isInUnion = false;
 
     }
@@ -98,7 +102,7 @@ class Employee {
     public void updateMOP() {
 
         if(Validation.updateMOP(this.id)){
-            String newMOP = Validation.getMOP(this.id);
+            String newMOP = GetEmployee.getMOP(this.id);
             if(newMOP.equals(""));
             else
                 this.mop = newMOP;
@@ -132,7 +136,7 @@ class Employee {
         System.out.print("\nEnter total sale amount: ");
         totalAmount = in.nextFloat();
 
-        Validation.addSaleReciept(recieptNumber, this.id, date, numberOfSales, totalAmount);
+        UpdateEmployee.addSaleReciept(recieptNumber, this.id, date, numberOfSales, totalAmount);
     }
 
 

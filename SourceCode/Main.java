@@ -16,10 +16,10 @@ public class Main {
 		HashMap<String, String> details;
 
 		if( k == 1 ) {
-			details = Validation.logIN("admin");
+			details = Login.logIN("admin");
 		}
 		else if(k == 2) {
-			details = Validation.logIN("employee");
+			details = Login.logIN("employee");
 		}
 		else
 			return;
@@ -37,23 +37,23 @@ public class Main {
 					break;
 
 				case "hourly" :
-					float hourRate = Validation.getHourRate(details.get("id"));
+					float hourRate = GetEmployee.getHourRate(details.get("id"));
 					if(hourRate < 0){
 						System.out.println("\nSome error occurred\nplease try again later");
 						return;
 					}
-					HourlyEmployee emp = new HourlyEmployee(details.get("name"), details.get("id"), details.get("password"), details.get("mop"), Boolean.parseBoolean(details.get("isInUnion")), Float.parseFloat(details.get("commissionRate")), hourRate);
-					emp.hourlyEmployeeMain();
+					HourlyEmployee emp1 = new HourlyEmployee(details.get("name"), details.get("id"), details.get("password"), details.get("mop"), Boolean.parseBoolean(details.get("isInUnion")), Float.parseFloat(details.get("commissionRate")), hourRate);
+					emp1.hourlyEmployeeMain();
 					break;
 
 				case "monthly" :
-					float salary = Validation.getSalary(details.get("id"));
+					float salary = GetEmployee.getSalary(details.get("id"));
 					if(salary < 0){
 						System.out.println("\nSome error occurred\nplease try again later");
 						return;
 					}
-					MonthlyEmployee emp = new MonthlyEmployee(details.get("name"), details.get("id"), details.get("password"), details.get("mop"), Boolean.parseBoolean(details.get("isInUnion")), Float.parseFloat(details.get("commissionRate")), salary);
-					emp.employeeMain();
+					MonthlyEmployee emp2 = new MonthlyEmployee(details.get("name"), details.get("id"), details.get("password"), details.get("mop"), Boolean.parseBoolean(details.get("isInUnion")), Float.parseFloat(details.get("commissionRate")), salary);
+					emp2.monthlyEmployeeMain();
 					break;
 			}
 		}
