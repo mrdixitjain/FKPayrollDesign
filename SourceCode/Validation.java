@@ -74,6 +74,8 @@ class Validation{
 
 
 
+
+
     public static void updateMOP(String id, String type) {
         String[] MOP = {"Paycheck", "PaycheckPickup", "BankTransfer"};
 
@@ -129,6 +131,109 @@ class Validation{
             con.commit();
 
             System.out.println("Method of Payment Changed SuccessFully.\nNew MOP: " + MOP[mop-1] + "\n");
+        }
+
+        catch (SQLException e ) {
+            e.printStackTrace();
+            if (con != null) {
+                try {
+                    System.err.print("Transaction is being rolled back");
+                    con.rollback();
+                } catch(SQLException excep) {
+                    excep.printStackTrace();
+                }
+            }
+        } 
+
+        finally {
+            try{
+                if(preparedStmt!=null)
+                   preparedStmt.close();
+            }
+            catch(SQLException se2){
+            }
+
+            try{
+                if(stmt!=null)
+                   stmt.close();
+            }
+            catch(SQLException se2){
+            }
+            
+            try{
+                if(con!=null){
+                    con.setAutoCommit(true);
+                    con.close();
+                }
+            }catch(SQLException se){
+                se.printStackTrace();
+            }
+        }
+
+
+    }
+
+
+
+    public static void updateCommission(String id, String type) {
+
+        int l = checkId(id);
+        if(l == 1 || l == 3){
+            System.out.println("\nUnable to locate Employee with Id: " + id);
+            System.out.println("Please Try Again\n");
+            return;
+        }
+
+        Connection con = null;
+        PreparedStatement preparedStmt = null;
+        Statement stmt = null;
+        String getQuery = "Select commissionRate from Employee where empId = '" + id + "' and type = '" + type +"'";
+        String updateString = "Update Employee set commissionRate = ? where empId = ? and type = ?";
+
+        try {
+            con = DriverManager.getConnection(  
+            "jdbc:mysql://localhost:3306/Employee","root","root");  
+
+            con.setAutoCommit(false);
+
+            stmt=con.createStatement();  
+            
+            ResultSet rs = stmt.executeQuery(getQuery);  
+            if(!rs.next()) {
+                System.out.println("\nUnable to locate Employee with Id: " + id);
+                System.out.println("Please Try Again\n");
+                return;
+            }
+
+            System.out.println("\nCurrent Commission Rate of Employee is: " + rs.getString(1));
+            System.out.println("Do You Want To change?\n  1. yes\n  2. no\n");
+
+            Scanner in = new Scanner(System.in);
+
+            int choice = in.nextInt();
+
+            if(choice != 1)
+                return;
+
+            System.out.print("\nEnter new commission rate: ");
+
+            float newRate = in.nextFloat();
+
+            if(newRate < 0 || newRate > 100){
+                System.out.println("\nCommission Rate can't be " + newRate);
+                return;
+            }
+
+            preparedStmt = con.prepareStatement(updateString);
+
+            preparedStmt.setFloat (1, newRate);
+            preparedStmt.setString (2, id);
+            preparedStmt.setString (3, type);
+            preparedStmt.execute();
+
+            con.commit();
+
+            System.out.println("Commission rate Changed SuccessFully.\nNew Rate: " + newRate + "\n");
         }
 
         catch (SQLException e ) {

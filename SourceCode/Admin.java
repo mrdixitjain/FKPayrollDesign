@@ -69,11 +69,11 @@ class Admin {
 
         String id = System.console().readLine("\nEnter Employee Id: ");
 
-        System.out.print("\nUpdate Employee's:\n  1. Method Of Payment:\n  2. Add To Union\n  3. Change Password\n  4. Commission Rate\n");
+        System.out.print("\nUpdate Employee's:\n  1. Method Of Payment\n  2. Password\n  3. Commission Rate\n");
         if(n == 1)
-            System.out.println("  5. Hourly Rate");
+            System.out.println("  4. Hourly Rate");
         if(n == 2)
-            System.out.println("  5. Salary");
+            System.out.println("  4. Salary");
         System.out.println("  0. To return.");
 
 
@@ -84,16 +84,13 @@ class Admin {
             case 1:
                 Validation.updateMOP(id, type[n-1]);
                 break;
-            // case 2:
-            //     Validation.addToUnion(id, type[n-1]);
-            //     break;
-            case 3:
+            case 2:
                 Validation.updatePassword(id, type[n-1]);
                 break;
+            case 3:
+                Validation.updateCommission(id, type[n-1]);
+                break;
             // case 4:
-            //     Validation.commission(id, type[n-1]);
-            //     break;
-            // case 5:
             //     Validation.updateSalary(id, type[n-1]);
             //     break;
             default:
