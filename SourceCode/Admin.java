@@ -1,5 +1,11 @@
 
 import java.util.*;
+import java.time.*; 
+import java.time.format.*; 
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.ChronoField;  
+import java.util.Calendar;
+import java.time.LocalDate;
 
 class Admin {
     public static final String[] MOP = {"Paycheck", "PaycheckPickup", "BankTransfer"};
@@ -126,8 +132,27 @@ class Admin {
 
 
 
+    public static void runPayroll() {
+        LocalDate currentDate = LocalDate.now();        
+        DayOfWeek dayOfWeek = DayOfWeek.from(currentDate);  
+        if(dayOfWeek.get(ChronoField.DAY_OF_WEEK) == 7) {
+            System.out.println("\nPaying to all Hourly workers\n");
+            Validation.payHourlyEmployee();
+        }
+
+        // currentDate.getDayOfMonth() == currentDate.lengthOfMonth()
+        if(true) {
+            System.out.println("\nPaying All commissions\n");
+            Validation.payCommissions();
+            System.out.println("\nPaying to all monthly Employee\n");
+            Validation.payMonthlyEmployee();
+        }
+    }
+
+
+
     private static int showChoices() {
-        String choices = "  1. Add new Employee\n  2. Remove Existing Employee\n  3. Update Existing Employee\n  4. Logout\n";
+        String choices = "  1. Add new Employee\n  2. Remove Existing Employee\n  3. Update Existing Employee\n  4. run Payroll\n  5. Logout\n";
         
         System.out.println("Enter a choice:\n" + choices);
         Scanner in = new Scanner(System.in);
@@ -162,11 +187,14 @@ class Admin {
                     updateEmployee();
                     break;
                 case 4 :
+                    runPayroll();
+                    break;
+                case 5 :
                     break Choice;
 
                 default :
                     System.out.println("\nPlease! enter a valid choice\n");
-                    continue;
+                    continue Choice;
             }
         }
         System.out.println("\nSuccessFully Logged out\n");
