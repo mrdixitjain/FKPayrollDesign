@@ -788,6 +788,88 @@ class Validation{
 // employee functions
 
 
+
+    public static void addTimeCard(String cardNumber, String empId, LocalDate entryDate, float workHours) {
+            int l = checkId(empId);
+            if(l == 1 || l == 3){
+                System.out.println("\nUnable to locate Employee with Id: " + empId);
+                System.out.println("Please Try Again\n");
+                return;
+            }
+
+            Connection con = null;
+            PreparedStatement preparedStmt = null;
+            Statement stmt = null;
+            String updateString = "Insert into TimeCards values(?, ?, ?, ?, ?)";
+
+            try {
+            con = DriverManager.getConnection(  
+            "jdbc:mysql://localhost:3306/Employee","root","root");  
+
+            con.setAutoCommit(false);
+
+            stmt=con.createStatement(); 
+
+            preparedStmt = con.prepareStatement(updateString);
+
+            preparedStmt.setString (1, cardNumber);
+            preparedStmt.setString (2, empId);
+            preparedStmt.setDate (3, java.sql.Date.valueOf(entryDate));
+            preparedStmt.setFloat (4, workHours);
+            preparedStmt.setBoolean (5, false);
+            preparedStmt.execute();
+
+            con.commit();
+
+            System.out.println("Time Card Added SuccessFully.\n");
+            return;
+        }
+
+        catch (SQLIntegrityConstraintViolationException e) {
+            System.out.println("\nEntry already exists for given Time Card Number.\n");
+            if (con != null) {
+                try {
+                    System.err.print("Transaction is being rolled back");
+                    con.rollback();
+                } catch(SQLException excep) {
+                    excep.printStackTrace();
+                }
+            }
+            return;
+        }
+
+        catch (SQLException e ) {
+            e.printStackTrace();
+            if (con != null) {
+                try {
+                    System.err.print("Transaction is being rolled back");
+                    con.rollback();
+                } catch(SQLException excep) {
+                    excep.printStackTrace();
+                }
+            }
+        } 
+
+        finally {
+            try{
+                if(preparedStmt!=null)
+                   preparedStmt.close();
+            }
+            catch(SQLException se2){
+            }
+            
+            try{
+                if(con!=null){
+                    con.setAutoCommit(true);
+                    con.close();
+                }
+            }catch(SQLException se){
+                se.printStackTrace();
+            }
+        }
+    }
+
+
     public static void addSaleReciept(String recieptNumber, String empId, LocalDate entryDate, int numberOfSales, float totalAmount) {
             int l = checkId(empId);
             if(l == 1 || l == 3){
@@ -822,6 +904,19 @@ class Validation{
             con.commit();
 
             System.out.println("Sale Reciept Added SuccessFully.\n");
+            return;
+        }
+
+        catch (SQLIntegrityConstraintViolationException e) {
+            System.out.println("\nEntry already exists for given Reciept Number\n");
+            if (con != null) {
+                try {
+                    System.err.print("Transaction is being rolled back");
+                    con.rollback();
+                } catch(SQLException excep) {
+                    excep.printStackTrace();
+                }
+            }
             return;
         }
 
