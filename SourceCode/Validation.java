@@ -69,7 +69,6 @@ class Validation{
             }
         }
 
-
     }
 
 
@@ -131,6 +130,121 @@ class Validation{
             con.commit();
 
             System.out.println("Method of Payment Changed SuccessFully.\nNew MOP: " + MOP[mop-1] + "\n");
+        }
+
+        catch (SQLException e ) {
+            e.printStackTrace();
+            if (con != null) {
+                try {
+                    System.err.print("Transaction is being rolled back");
+                    con.rollback();
+                } catch(SQLException excep) {
+                    excep.printStackTrace();
+                }
+            }
+        } 
+
+        finally {
+            try{
+                if(preparedStmt!=null)
+                   preparedStmt.close();
+            }
+            catch(SQLException se2){
+            }
+
+            try{
+                if(stmt!=null)
+                   stmt.close();
+            }
+            catch(SQLException se2){
+            }
+            
+            try{
+                if(con!=null){
+                    con.setAutoCommit(true);
+                    con.close();
+                }
+            }catch(SQLException se){
+                se.printStackTrace();
+            }
+        }
+
+
+    }
+
+
+
+    public static void updateSalary(String id, String type) {
+
+        int l = checkId(id);
+        if(l == 1 || l == 3){
+            System.out.println("\nUnable to locate Employee with Id: " + id);
+            System.out.println("Please Try Again\n");
+            return;
+        }
+
+        Connection con = null;
+        PreparedStatement preparedStmt = null;
+        Statement stmt = null;
+        String getQuery, updateString, show1, show2, show3;
+        if(type.equals("hourly")) {
+            getQuery = "Select rate from HourRate where empId = '" + id + "'";
+            updateString = "Update HourRate set rate = ? where empId = ?";
+            show1 = "\nCurrent Hour Rate of Employee is: ";
+            show2 = "Hour Rate updated SuccessFully\nNew Hour Rate: ";
+            show3 = "\nEnter new Hour Rate: ";
+        }
+        else{
+            getQuery = "Select salary from MonthlySalary where empId = '" + id + "'";
+            updateString = "Update MonthlySalary set salary = ? where empId = ?";
+            show1 = "\nCurrent salary of Employee is: ";
+            show2 = "\nsalary updated SuccessFully\nNew salary: ";
+            show3 = "\nEnter new Salary: ";
+        }
+
+        try {
+            con = DriverManager.getConnection(  
+            "jdbc:mysql://localhost:3306/Employee","root","root");  
+
+            con.setAutoCommit(false);
+
+            stmt=con.createStatement();  
+            
+            ResultSet rs = stmt.executeQuery(getQuery);  
+            if(!rs.next()) {
+                System.out.println("\nUnable to locate Employee with Id: " + id);
+                System.out.println("Please Try Again\n");
+                return;
+            }
+
+            System.out.println(show1 + rs.getString(1));
+            System.out.println("Do You Want To change?\n  1. yes\n  2. no\n");
+
+            Scanner in = new Scanner(System.in);
+
+            int choice = in.nextInt();
+
+            if(choice != 1)
+                return;
+
+            System.out.print(show3);
+
+            float salary = in.nextFloat();
+
+            if(salary < 0) {
+                System.out.println("\nCan't be Negative\n");
+                return;
+            }
+
+            preparedStmt = con.prepareStatement(updateString);
+
+            preparedStmt.setFloat (1, salary);
+            preparedStmt.setString (2, id);
+            preparedStmt.execute();
+
+            con.commit();
+
+            System.out.println(show2 + salary + "\n");
         }
 
         catch (SQLException e ) {

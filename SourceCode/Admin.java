@@ -90,9 +90,9 @@ class Admin {
             case 3:
                 Validation.updateCommission(id, type[n-1]);
                 break;
-            // case 4:
-            //     Validation.updateSalary(id, type[n-1]);
-            //     break;
+            case 4:
+                Validation.updateSalary(id, type[n-1]);
+                break;
             default:
                 break;
         }
