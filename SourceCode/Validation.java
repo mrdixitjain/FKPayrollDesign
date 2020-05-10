@@ -6,6 +6,72 @@ import java.sql.DriverManager;
 
 class Validation{  
 
+
+    public static void updatePassword(String id, String type) {
+
+        int l = checkId(id);
+        if(l == 1 || l == 3){
+            System.out.println("\nUnable to locate Employee with Id: " + id);
+            System.out.println("Please Try Again\n");
+            return;
+        }
+
+        Connection con = null;
+        PreparedStatement preparedStmt = null;
+        String updateString = "Update Employee set password = ? where empId = ? and type = ?";
+
+        try {
+            con = DriverManager.getConnection(  
+            "jdbc:mysql://localhost:3306/Employee","root","root");  
+
+            con.setAutoCommit(false);
+
+            preparedStmt = con.prepareStatement(updateString);
+
+            String newPassword = Generate.generatePassword();
+            preparedStmt.setString (1, newPassword);
+            preparedStmt.setString (2, id);
+            preparedStmt.setString (3, type);
+            preparedStmt.execute();
+
+            con.commit();
+
+            System.out.println("Password Changed SuccessFully.\nNew Password: " + newPassword + "\n");
+        }
+
+        catch (SQLException e ) {
+            e.printStackTrace();
+            if (con != null) {
+                try {
+                    System.err.print("Transaction is being rolled back");
+                    con.rollback();
+                } catch(SQLException excep) {
+                    excep.printStackTrace();
+                }
+            }
+        } 
+
+        finally {
+            try{
+                if(preparedStmt!=null)
+                   preparedStmt.close();
+            }
+            catch(SQLException se2){
+            }
+            
+            try{
+                if(con!=null){
+                    con.setAutoCommit(true);
+                    con.close();
+                }
+            }catch(SQLException se){
+                se.printStackTrace();
+            }
+        }
+
+
+    }
+
     public static int checkId(String id) {
         Connection con = null;
         String query = "select * from Employee where empId = '" + id +"'";

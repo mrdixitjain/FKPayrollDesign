@@ -3,12 +3,14 @@ import java.util.*;
 
 class Admin {
     public static final String[] MOP = {"Paycheck", "PaycheckPickup", "BankTransfer"};
+    public static final String[] type = {"hourly", "monthly"};
 
     private static HashMap<String, String> adminDetails;
 
+    
     private static void addEmployee() {
         
-        System.out.println("\nAdd Type Of Employee:\n  1. Hourly Paid\n  2. Monthly Paid");
+        System.out.println("\nEnter Type Of Employee:\n  1. Hourly Paid\n  2. Monthly Paid");
         Scanner in = new Scanner(System.in);
 
         int n = in.nextInt();
@@ -57,6 +59,48 @@ class Admin {
 
     }
 
+    private static void updateEmployee() {
+        
+        System.out.println("\nEnter Type Of Employee:\n  1. Hourly Paid\n  2. Monthly Paid");
+        Scanner in = new Scanner(System.in);
+
+        int n = in.nextInt();
+
+
+        String id = System.console().readLine("\nEnter Employee Id: ");
+
+        System.out.print("\nUpdate Employee's:\n  1. Method Of Payment:\n  2. Add To Union\n  3. Change Password\n  4. Commission Rate\n");
+        if(n == 1)
+            System.out.println("  5. Hourly Rate");
+        if(n == 2)
+            System.out.println("  5. Salary");
+        System.out.println("  0. To return.");
+
+
+
+        int k = in.nextInt();
+
+        switch(k) {
+            // case 1:
+            //     Validation.updateMOP(id, type[n-1]);
+            //     break;
+            // case 2:
+            //     Validation.addToUnion(id, type[n-1]);
+            //     break;
+            case 3:
+                Validation.updatePassword(id, type[n-1]);
+                break;
+            // case 4:
+            //     Validation.commission(id, type[n-1]);
+            //     break;
+            // case 5:
+            //     Validation.updateSalary(id, type[n-1]);
+            //     break;
+            default:
+                break;
+        }
+    }
+
 
 
     private static int showChoices() {
@@ -91,9 +135,9 @@ class Admin {
                 // case 2 :
                 //     removeEmployee();
                 //     break;
-                // case 3 :
-                //     updateEmployee();
-                //     break;
+                case 3 :
+                    updateEmployee();
+                    break;
                 case 4 :
                     break Choice;
 
